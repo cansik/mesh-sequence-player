@@ -1,7 +1,9 @@
 # Mesh Sequence Player
-A simple mesh sequence player based on [open3d](https://github.com/intel-isl/Open3D). It just loads all the mesh files and plays them back. The tool is intended for preview and visualisation purposes only.
+A simple mesh sequence player based on [open3d](https://github.com/intel-isl/Open3D).
 
 ![person](readme/person_square.gif)
+
+It just loads all the mesh files and plays them back. The tool is intended for preview and visualisation purposes only. Currently there is no support for multi-processing in open3d, so mesh loading takes some time.
 
 ### Installation
 To install the necessary packages, use the requirements file:
