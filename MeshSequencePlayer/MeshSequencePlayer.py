@@ -10,6 +10,8 @@ class MeshSequencePlayer:
         self.fps = fps
         self.loop = loop
         self.meshes = []
+        self.rotation_x = 0.0
+        self.rotation_y = 0.0
 
         self.vis = o3d.visualization.Visualizer()
 
@@ -32,6 +34,9 @@ class MeshSequencePlayer:
                                height=height,
                                visible=visible)
 
+        # add first mesh
+        self.vis.add_geometry(self.meshes[self._index], reset_bounding_box=True)
+
     def close(self):
         self._is_playing = False
         self.vis.destroy_window()
@@ -48,9 +53,15 @@ class MeshSequencePlayer:
 
     def _play_loop(self):
         while self._is_playing:
+            # rotation
+            ctr = self.vis.get_view_control()
+            ctr.rotate(self.rotation_x, self.rotation_y)
+
+            # events
             self.vis.poll_events()
             self.vis.update_renderer()
 
+            # frame playing
             current = self._millis()
             if (current - self._last_update_ts) > (1000.0 / self.fps):
                 self._next_frame()
@@ -60,9 +71,9 @@ class MeshSequencePlayer:
         if not self.loop and self._index == len(self.meshes) - 1:
             self._is_playing = False
 
-        self.vis.remove_geometry(self.meshes[self._index])
+        self.vis.remove_geometry(self.meshes[self._index], reset_bounding_box=False)
         self._index = (self._index + 1) % len(self.meshes)
-        self.vis.add_geometry(self.meshes[self._index])
+        self.vis.add_geometry(self.meshes[self._index], reset_bounding_box=False)
 
     @staticmethod
     def _millis() -> int:
