@@ -31,8 +31,8 @@ Here is the full help file.
 
 ```
 usage: mesh-sequence-player.py [-h] [--format FORMAT] [--fps FPS] [--no-loop]
-                               [--width WIDTH] [--height HEIGHT]
-                               [--rotation ROTATION] [--hidden]
+                               [--width WIDTH] [--height HEIGHT] [--hidden]
+                               [--rotation ROTATION] [--output OUTPUT]
                                input
 
 Play mesh sequences directly in python.
@@ -47,8 +47,10 @@ optional arguments:
   --no-loop            Do not loop the sequence.
   --width WIDTH        Player width (default 1920).
   --height HEIGHT      Player height (default 1080).
-  --rotation ROTATION  Horizontal axis rotation.
   --hidden             Hide preview window.
+  --rotation ROTATION  Horizontal axis rotation.
+  --output OUTPUT      Output path to store rendered frames. Sets no-loop to
+                       True.
 ```
 
 ### About
