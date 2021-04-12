@@ -17,6 +17,13 @@ To display a sequence of mesh files just run the following command:
 python mesh-sequence-player.py mesh-folder --format *.obj
 ```
 
+#### Rendering
+It is also possible to render the individual frames into a png sequence. Currently only one mesh view will be rendered and not the stable FPS. If an `output` path is provided, the `no-loop` option is automatically set to `True`.
+
+```
+python mesh-sequence-player.py mesh-folder --output frames
+```
+
 #### Help
 
 ```

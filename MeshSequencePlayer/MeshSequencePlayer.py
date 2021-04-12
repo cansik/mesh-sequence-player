@@ -1,3 +1,4 @@
+import os
 import time
 
 import open3d as o3d
@@ -12,6 +13,10 @@ class MeshSequencePlayer:
         self.meshes = []
         self.rotation_x = 0.0
         self.rotation_y = 0.0
+
+        self.render = False
+        self.output_path = ""
+        self.render_index = 0
 
         self.vis = o3d.visualization.Visualizer()
 
@@ -64,6 +69,13 @@ class MeshSequencePlayer:
             # frame playing
             current = self._millis()
             if (current - self._last_update_ts) > (1000.0 / self.fps):
+                # render
+                if self.render:
+                    # todo: make rendering fps stable
+                    frame_path = os.path.join(self.output_path, "frame_%04d.png" % self.render_index)
+                    self.vis.capture_screen_image(frame_path)
+                    self.render_index += 1
+
                 self._next_frame()
                 self._last_update_ts = current
 
