@@ -36,4 +36,4 @@ optional arguments:
 ```
 
 ### About
-Copyright (c) 2021 Florian Bruggisser
+MIT License - Copyright (c) 2021 Florian Bruggisser
