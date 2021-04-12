@@ -21,6 +21,7 @@ python mesh-sequence-player.py mesh-folder --format *.obj
 
 ```
 usage: mesh-sequence-player.py [-h] [--format FORMAT] [--fps FPS] [--no-loop]
+                               [--width WIDTH] [--height HEIGHT] [--hidden]
                                input
 
 Play mesh sequences directly in python.
@@ -30,9 +31,12 @@ positional arguments:
 
 optional arguments:
   -h, --help       show this help message and exit
-  --format FORMAT  File format (Default *.obj).
+  --format FORMAT  File format (default *.obj).
   --fps FPS        Framerate for playback.
   --no-loop        Do not loop the sequence.
+  --width WIDTH    Player width (default 1920).
+  --height HEIGHT  Player height (default 1080).
+  --hidden         Hide preview window.
 ```
 
 ### About

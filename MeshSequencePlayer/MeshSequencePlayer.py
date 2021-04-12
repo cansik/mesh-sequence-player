@@ -24,8 +24,13 @@ class MeshSequencePlayer:
         files = sorted(get_files_in_path(mesh_folder, extensions=[mesh_format]))
         [self.add(mesh_path) for mesh_path in files]
 
-    def open(self):
-        self.vis.create_window()
+    def open(self, window_name: str = 'Mesh Sequence Player',
+             width: int = 1080, height: int = 1080,
+             visible: bool = True):
+        self.vis.create_window(window_name=window_name,
+                               width=width,
+                               height=height,
+                               visible=visible)
 
     def close(self):
         self._is_playing = False
