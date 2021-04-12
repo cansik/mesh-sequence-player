@@ -1,0 +1,4 @@
+*.obj
+venv
+*.pyc
+.idea
