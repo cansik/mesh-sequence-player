@@ -24,6 +24,7 @@ def main():
 
 if __name__ == "__main__":
     a = argparse.ArgumentParser(
+        prog="mesh_sequence_player",
         description="Play mesh sequences directly in python.")
     a.add_argument("input", help="Path to the mesh files (directory).")
     a.add_argument("--format", default="*.obj", type=str, help="File format (default *.obj).")
