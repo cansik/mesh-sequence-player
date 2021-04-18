@@ -9,28 +9,28 @@ It just loads all the mesh files and plays them back. The tool is intended for p
 To install the necessary packages, use the requirements file:
 
 ```
-pip install git+https://github.com/cansik/mesh-sequence-player.git@1.0.0
+pip install git+https://github.com/cansik/mesh-sequence-player.git@1.1.0
 ```
 
 ### Usage
 To display a sequence of mesh files just run the following command:
 
 ```
-python -m mesh-sequence-player folder_to_meshes
+python -m mesh_sequence_player folder_to_meshes
 ```
 
 #### Rendering
 It is also possible to render the individual frames into a png sequence. Currently only one mesh view will be rendered and not the stable FPS. If an `output` path is provided, the `no-loop` option is automatically set to `True`.
 
 ```
-python -m mesh-sequence-player folder_to_meshes --output frames
+python -m mesh_sequence_player folder_to_meshes --output frames
 ```
 
 #### Help
 Here is the full help file.
 
 ```
-usage: mesh-sequence-player.py [-h] [--format FORMAT] [--fps FPS] [--no-loop]
+usage: mesh_sequence_player [-h] [--format FORMAT] [--fps FPS] [--no-loop]
                                [--width WIDTH] [--height HEIGHT] [--hidden]
                                [--rotation ROTATION] [--output OUTPUT]
                                input

@@ -1,6 +1,6 @@
 import os
 
-from MeshSequencePlayer.MeshSequencePlayer import MeshSequencePlayer
+from mesh_sequence_player.MeshSequencePlayer import MeshSequencePlayer
 import argparse
 
 

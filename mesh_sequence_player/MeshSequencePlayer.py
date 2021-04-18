@@ -3,7 +3,7 @@ import time
 
 import open3d as o3d
 
-from MeshSequencePlayer.utils import get_files_in_path
+from mesh_sequence_player.utils import get_files_in_path
 
 
 class MeshSequencePlayer:
