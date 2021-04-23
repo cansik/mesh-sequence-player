@@ -3,6 +3,8 @@ import os
 from mesh_sequence_player.MeshSequencePlayer import MeshSequencePlayer
 import argparse
 
+from mesh_sequence_player.utils import get_files_in_path
+
 
 def main():
     player = MeshSequencePlayer(fps=args.fps, loop=not args.no_loop)
@@ -18,12 +20,15 @@ def main():
         player.render = True
         player.output_path = os.path.abspath(args.output)
 
-    print("loading meshes...")
-    player.load(args.input)
+    # check how many meshes
+    files = get_files_in_path(args.input, extensions=[args.format])
+    print("loading %d meshes..." % len(files))
+    player.load(args.input, args.format)
 
     print("playing...")
     player.open(window_name="Mesh Sequence Player - %s" % dir_name,
                 width=args.width, height=args.height, visible=not args.hidden)
+
     player.play()
     player.close()
 
