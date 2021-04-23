@@ -39,6 +39,10 @@ class MeshSequencePlayer:
                                height=height,
                                visible=visible)
 
+        if len(self.meshes) == 0:
+            print("No meshes to show!")
+            return
+
         # add first mesh
         self.vis.add_geometry(self.meshes[self._index], reset_bounding_box=True)
 
@@ -63,8 +67,14 @@ class MeshSequencePlayer:
             ctr.rotate(self.rotation_x, self.rotation_y)
 
             # events
-            self.vis.poll_events()
+            if not self.vis.poll_events():
+                break
+
             self.vis.update_renderer()
+
+            # skip if no meshes available
+            if len(self.meshes) == 0:
+                continue
 
             # frame playing
             current = self._millis()
