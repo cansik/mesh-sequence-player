@@ -7,6 +7,7 @@ import argparse
 def main():
     player = MeshSequencePlayer(fps=args.fps, loop=not args.no_loop)
     player.rotation_x = args.rotation
+    dir_name = os.path.split(args.input)[-1]
 
     if args.output is not None:
         # force mp4 filename for renderer
@@ -21,7 +22,8 @@ def main():
     player.load(args.input)
 
     print("playing...")
-    player.open(width=args.width, height=args.height, visible=not args.hidden)
+    player.open(window_name="Mesh Sequence Player - %s" % dir_name,
+                width=args.width, height=args.height, visible=not args.hidden)
     player.play()
     player.close()
 
