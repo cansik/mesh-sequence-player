@@ -20,25 +20,28 @@ python -m mesh_sequence_player folder_to_meshes
 ```
 
 #### Rendering
-It is also possible to render the individual frames into a png sequence. Currently only one mesh view will be rendered and not the stable FPS. If an `output` path is provided, the `no-loop` option is automatically set to `True`.
+It is also possible to render the individual frames into a mp4 file. Currently only one mesh view will be rendered. If an `output` path is provided, the `no-loop` option is automatically set to `True` and rendering will run with `1000.0 FPS` to render as fast as possible.
 
 ```
-python -m mesh_sequence_player folder_to_meshes --output frames
+python -m mesh_sequence_player folder_to_meshes --output render.mp4
 ```
 
 #### Help
 Here is the full help file.
 
 ```
-usage: mesh_sequence_player [-h] [--input INPUT] [--format FORMAT] [--fps FPS]
-                            [--no-loop] [--width WIDTH] [--height HEIGHT]
-                            [--hidden] [--rotation ROTATION] [--output OUTPUT]
+usage: mesh_sequence_player [-h] [--format FORMAT] [--fps FPS] [--no-loop]
+                            [--width WIDTH] [--height HEIGHT] [--hidden]
+                            [--rotation ROTATION] [--output OUTPUT]
+                            input
 
 Play mesh sequences directly in python.
 
+positional arguments:
+  input                Path to the mesh files (directory).
+
 optional arguments:
   -h, --help           show this help message and exit
-  --input INPUT        Path to the mesh files (directory).
   --format FORMAT      File format (default *.obj).
   --fps FPS            Framerate for playback.
   --no-loop            Do not loop the sequence.
@@ -46,8 +49,7 @@ optional arguments:
   --height HEIGHT      Player height (default 512).
   --hidden             Hide preview window.
   --rotation ROTATION  Horizontal axis rotation.
-  --output OUTPUT      Output path to store rendered frames. Sets no-loop to
-                       True.
+  --output OUTPUT      Output path to mp4 file. Sets no-loop to True.
 ```
 
 ### About

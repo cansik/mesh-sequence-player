@@ -9,9 +9,13 @@ def main():
     player.rotation_x = args.rotation
 
     if args.output is not None:
-        os.makedirs(args.output, exist_ok=True)
+        # force mp4 filename for renderer
+        if not args.output.endswith(".mp4"):
+            args.output += ".mp4"
+
+        os.makedirs(os.path.dirname(args.output), exist_ok=True)
         player.render = True
-        player.output_path = args.output
+        player.output_path = os.path.abspath(args.output)
 
     print("loading meshes...")
     player.load(args.input)
@@ -35,7 +39,7 @@ if __name__ == "__main__":
     a.add_argument("--hidden", action='store_true', help="Hide preview window.")
     a.add_argument("--rotation", default=0.0, type=float, help="Horizontal axis rotation.")
     a.add_argument("--output", default=None, type=str,
-                   help="Output path to store rendered frames. Sets no-loop to True.")
+                   help="Output path to mp4 file. Sets no-loop to True.")
     args = a.parse_args()
 
     if args.output is not None:
