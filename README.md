@@ -30,23 +30,20 @@ python -m mesh_sequence_player folder_to_meshes --output frames
 Here is the full help file.
 
 ```
-usage: mesh_sequence_player [-h] [--format FORMAT] [--fps FPS] [--no-loop]
-                               [--width WIDTH] [--height HEIGHT] [--hidden]
-                               [--rotation ROTATION] [--output OUTPUT]
-                               input
+usage: mesh_sequence_player [-h] [--input INPUT] [--format FORMAT] [--fps FPS]
+                            [--no-loop] [--width WIDTH] [--height HEIGHT]
+                            [--hidden] [--rotation ROTATION] [--output OUTPUT]
 
 Play mesh sequences directly in python.
 
-positional arguments:
-  input                Path to the mesh files (directory).
-
 optional arguments:
   -h, --help           show this help message and exit
+  --input INPUT        Path to the mesh files (directory).
   --format FORMAT      File format (default *.obj).
   --fps FPS            Framerate for playback.
   --no-loop            Do not loop the sequence.
-  --width WIDTH        Player width (default 1920).
-  --height HEIGHT      Player height (default 1080).
+  --width WIDTH        Player width (default 512).
+  --height HEIGHT      Player height (default 512).
   --hidden             Hide preview window.
   --rotation ROTATION  Horizontal axis rotation.
   --output OUTPUT      Output path to store rendered frames. Sets no-loop to
