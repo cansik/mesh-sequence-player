@@ -1,2 +1,4 @@
+wheel
 open3d~=0.12.0
 opencv-python
+tqdm

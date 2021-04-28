@@ -1,10 +1,9 @@
-import os
 import time
 
-import cv2
 import numpy as np
 import open3d as o3d
-from cv2 import VideoCapture, VideoWriter_fourcc, VideoWriter
+from cv2 import VideoWriter_fourcc, VideoWriter
+from tqdm import tqdm
 
 from mesh_sequence_player.utils import get_files_in_path
 
@@ -34,7 +33,11 @@ class MeshSequencePlayer:
 
     def load(self, mesh_folder: str, mesh_format: str = "*.obj"):
         files = sorted(get_files_in_path(mesh_folder, extensions=[mesh_format]))
-        [self.add(mesh_path) for mesh_path in files]
+
+        with tqdm(total=len(files), desc="loading meshes") as pbar:
+            for mesh_path in files:
+                self.add(mesh_path)
+                pbar.update()
 
     def open(self, window_name: str = 'Mesh Sequence Player',
              width: int = 1080, height: int = 1080,

@@ -20,12 +20,7 @@ def main():
         player.render = True
         player.output_path = os.path.abspath(args.output)
 
-    # check how many meshes
-    files = get_files_in_path(args.input, extensions=[args.format])
-    print("loading %d meshes..." % len(files))
     player.load(args.input, args.format)
-
-    print("playing...")
     player.open(window_name="Mesh Sequence Player - %s" % dir_name,
                 width=args.width, height=args.height, visible=not args.hidden)
 
