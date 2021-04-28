@@ -27,6 +27,7 @@ class MeshSequencePlayer:
         self._last_update_ts = 0
 
         self._writer: VideoWriter = None
+        self._progress_bar: tqdm = None
 
     def add(self, mesh_path: str):
         self.meshes.append(o3d.io.read_triangle_mesh(mesh_path))
@@ -54,6 +55,7 @@ class MeshSequencePlayer:
         if self.render:
             fourcc = VideoWriter_fourcc(*'mp4v')
             self._writer = VideoWriter(self.output_path, fourcc, self.fps, (width, height))
+            self._progress_bar = tqdm(total=len(self.meshes), desc="rendering")
 
             # make rendering as fast as possible
             self.fps = 10000.0
@@ -99,6 +101,7 @@ class MeshSequencePlayer:
                 self._writer.write(color)
 
                 self.render_index += 1
+                self._progress_bar.update()
 
             # frame playing
             current = self._millis()
@@ -110,6 +113,7 @@ class MeshSequencePlayer:
         if not self.loop and self._index == len(self.meshes) - 1:
             if self.render:
                 self._writer.release()
+                self._progress_bar.close()
 
             self._is_playing = False
 
