@@ -125,7 +125,7 @@ class MeshSequencePlayer:
             self._fps_counter.update()
 
             if self.debug:
-                print("FPS: %0.2f" % self._fps_counter.fps)
+                tqdm.write("FPS: %0.2f" % self._fps_counter.fps)
 
     def _next_frame(self):
         if not self.loop and self._index == len(self.meshes) - 1:
