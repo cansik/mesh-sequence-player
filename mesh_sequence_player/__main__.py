@@ -1,14 +1,12 @@
+import argparse
 import os
 
 from mesh_sequence_player.MeshSequencePlayer import MeshSequencePlayer
-import argparse
-
-from mesh_sequence_player.utils import get_files_in_path
 
 
 def main():
     player = MeshSequencePlayer(fps=args.fps, loop=not args.no_loop)
-    player.rotation_x = args.rotation
+    player.rotation_x = args.rotate
     dir_name = os.path.split(args.input)[-1]
 
     if args.output is not None:
@@ -39,7 +37,7 @@ if __name__ == "__main__":
     a.add_argument("--width", default=512, type=int, help="Player width (default 512).")
     a.add_argument("--height", default=512, type=int, help="Player height (default 512).")
     a.add_argument("--hidden", action='store_true', help="Hide preview window.")
-    a.add_argument("--rotation", default=0.0, type=float, help="Horizontal axis rotation.")
+    a.add_argument("--rotate", default=0.0, type=float, help="Horizontal axis rotation.")
     a.add_argument("--output", default=None, type=str,
                    help="Output path to mp4 file. Sets no-loop to True.")
     args = a.parse_args()
