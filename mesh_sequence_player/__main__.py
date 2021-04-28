@@ -7,6 +7,9 @@ from mesh_sequence_player.MeshSequencePlayer import MeshSequencePlayer
 def main():
     player = MeshSequencePlayer(fps=args.fps, loop=not args.no_loop)
     player.rotation_x = args.rotate
+    player.background_color = args.background
+    player.debug = args.debug
+
     dir_name = os.path.split(args.input)[-1]
 
     if args.output is not None:
@@ -36,10 +39,13 @@ if __name__ == "__main__":
     a.add_argument("--no-loop", action='store_true', help="Do not loop the sequence.")
     a.add_argument("--width", default=512, type=int, help="Player width (default 512).")
     a.add_argument("--height", default=512, type=int, help="Player height (default 512).")
+    a.add_argument("--background", default=[255, 255, 255], type=int, nargs=3, metavar=('r', 'g', 'b'),
+                   help="Background color (0-255).")
     a.add_argument("--hidden", action='store_true', help="Hide preview window.")
     a.add_argument("--rotate", default=0.0, type=float, help="Horizontal axis rotation.")
-    a.add_argument("--output", default=None, type=str,
-                   help="Output path to mp4 file. Sets no-loop to True.")
+    a.add_argument("--output", default=None, type=str, help="Output path to mp4 file. Sets no-loop to True.")
+    a.add_argument("--debug", action='store_true', help="Show debug information.")
+
     args = a.parse_args()
 
     if args.output is not None:

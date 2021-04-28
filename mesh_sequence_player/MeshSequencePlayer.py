@@ -5,6 +5,7 @@ import open3d as o3d
 from cv2 import VideoWriter_fourcc, VideoWriter
 from tqdm import tqdm
 
+from mesh_sequence_player.FPSCounter import FPSCounter
 from mesh_sequence_player.utils import get_files_in_path
 
 
@@ -15,6 +16,9 @@ class MeshSequencePlayer:
         self.meshes = []
         self.rotation_x = 0.0
         self.rotation_y = 0.0
+        self.background_color = [255, 255, 255]
+
+        self.debug = False
 
         self.render = False
         self.output_path = "render.mp4"
@@ -28,6 +32,8 @@ class MeshSequencePlayer:
 
         self._writer: VideoWriter = None
         self._progress_bar: tqdm = None
+
+        self._fps_counter = FPSCounter()
 
     def add(self, mesh_path: str):
         self.meshes.append(o3d.io.read_triangle_mesh(mesh_path))
@@ -60,6 +66,10 @@ class MeshSequencePlayer:
             # make rendering as fast as possible
             self.fps = 10000.0
 
+        # set background color
+        opt = self.vis.get_render_option()
+        opt.background_color = np.asarray(self.background_color)
+
         # add first mesh
         self.vis.add_geometry(self.meshes[self._index], reset_bounding_box=True)
 
@@ -78,6 +88,8 @@ class MeshSequencePlayer:
         self._index = index
 
     def _play_loop(self):
+        self._fps_counter.reset()
+
         while self._is_playing:
             # rotation
             ctr = self.vis.get_view_control()
@@ -109,6 +121,12 @@ class MeshSequencePlayer:
                 self._next_frame()
                 self._last_update_ts = current
 
+            # keep track of fps
+            self._fps_counter.update()
+
+            if self.debug:
+                print("FPS: %0.2f" % self._fps_counter.fps)
+
     def _next_frame(self):
         if not self.loop and self._index == len(self.meshes) - 1:
             if self.render:
@@ -118,6 +136,7 @@ class MeshSequencePlayer:
             self._is_playing = False
 
         self.vis.remove_geometry(self.meshes[self._index], reset_bounding_box=False)
+        self.vis.get_render_option()
         self._index = (self._index + 1) % len(self.meshes)
         self.vis.add_geometry(self.meshes[self._index], reset_bounding_box=False)
 
