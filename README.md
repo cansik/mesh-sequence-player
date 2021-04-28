@@ -9,7 +9,7 @@ It just loads all the mesh files and plays them back. The tool is intended for p
 To install the necessary packages, use the requirements file:
 
 ```
-pip install git+https://github.com/cansik/mesh-sequence-player.git@1.3.0
+pip install git+https://github.com/cansik/mesh-sequence-player.git@1.4.0
 ```
 
 ### Usage
@@ -31,25 +31,28 @@ Here is the full help file.
 
 ```
 usage: mesh_sequence_player [-h] [--format FORMAT] [--fps FPS] [--no-loop]
-                            [--width WIDTH] [--height HEIGHT] [--hidden]
-                            [--rotation ROTATION] [--output OUTPUT]
+                            [--width WIDTH] [--height HEIGHT]
+                            [--background r g b] [--hidden] [--rotate ROTATE]
+                            [--output OUTPUT] [--debug]
                             input
 
 Play mesh sequences directly in python.
 
 positional arguments:
-  input                Path to the mesh files (directory).
+  input               Path to the mesh files (directory).
 
 optional arguments:
-  -h, --help           show this help message and exit
-  --format FORMAT      File format (default *.obj).
-  --fps FPS            Framerate for playback.
-  --no-loop            Do not loop the sequence.
-  --width WIDTH        Player width (default 512).
-  --height HEIGHT      Player height (default 512).
-  --hidden             Hide preview window.
-  --rotation ROTATION  Horizontal axis rotation.
-  --output OUTPUT      Output path to mp4 file. Sets no-loop to True.
+  -h, --help          show this help message and exit
+  --format FORMAT     File format (default *.obj).
+  --fps FPS           Framerate for playback.
+  --no-loop           Do not loop the sequence.
+  --width WIDTH       Player width (default 512).
+  --height HEIGHT     Player height (default 512).
+  --background r g b  Background color (0-255).
+  --hidden            Hide preview window.
+  --rotate ROTATE     Horizontal axis rotation.
+  --output OUTPUT     Output path to mp4 file. Sets no-loop to True.
+  --debug             Show debug information.
 ```
 
 ### About

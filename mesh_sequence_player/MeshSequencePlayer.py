@@ -136,7 +136,6 @@ class MeshSequencePlayer:
             self._is_playing = False
 
         self.vis.remove_geometry(self.meshes[self._index], reset_bounding_box=False)
-        self.vis.get_render_option()
         self._index = (self._index + 1) % len(self.meshes)
         self.vis.add_geometry(self.meshes[self._index], reset_bounding_box=False)
 
