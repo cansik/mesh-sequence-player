@@ -6,6 +6,7 @@ from cv2 import VideoWriter_fourcc, VideoWriter
 from tqdm import tqdm
 
 from mesh_sequence_player.FPSCounter import FPSCounter
+from mesh_sequence_player.FastGeometryLoader import load_geometries_fast, load_geometries_safe
 from mesh_sequence_player.utils import get_files_in_path
 
 
@@ -19,6 +20,7 @@ class MeshSequencePlayer:
         self.background_color = [255, 255, 255]
 
         self.debug = False
+        self.load_safe = False
 
         self.render = False
         self.output_path = "render.mp4"
@@ -35,16 +37,13 @@ class MeshSequencePlayer:
 
         self._fps_counter = FPSCounter()
 
-    def add(self, mesh_path: str):
-        self.meshes.append(o3d.io.read_triangle_mesh(mesh_path))
-
     def load(self, mesh_folder: str, mesh_format: str = "*.obj"):
         files = sorted(get_files_in_path(mesh_folder, extensions=[mesh_format]))
 
-        with tqdm(total=len(files), desc="loading meshes") as pbar:
-            for mesh_path in files:
-                self.add(mesh_path)
-                pbar.update()
+        if self.load_safe:
+            self.meshes = load_geometries_safe(files)
+        else:
+            self.meshes = load_geometries_fast(files)
 
     def open(self, window_name: str = 'Mesh Sequence Player',
              width: int = 1080, height: int = 1080,

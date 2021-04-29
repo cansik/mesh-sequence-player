@@ -9,6 +9,7 @@ def main():
     player.rotation_x = args.rotate
     player.background_color = args.background
     player.debug = args.debug
+    player.load_safe = args.load_safe
 
     dir_name = os.path.split(args.input)[-1]
 
@@ -44,6 +45,7 @@ if __name__ == "__main__":
     a.add_argument("--hidden", action='store_true', help="Hide preview window.")
     a.add_argument("--rotate", default=0.0, type=float, help="Horizontal axis rotation.")
     a.add_argument("--output", default=None, type=str, help="Output path to mp4 file. Sets no-loop to True.")
+    a.add_argument("--load-safe", action='store_true', help="Load meshes the safe way and with texture (but slower).")
     a.add_argument("--debug", action='store_true', help="Show debug information.")
 
     args = a.parse_args()

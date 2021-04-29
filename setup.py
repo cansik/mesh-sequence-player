@@ -9,7 +9,7 @@ with open('requirements.txt') as f:
 
 setup(
     name=NAME,
-    version='1.4.0',
+    version='1.5.0',
     packages=required_packages,
     url='https://github.com/cansik/mesh-sequence-player',
     license='MIT License',
