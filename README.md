@@ -3,13 +3,13 @@ A simple mesh sequence player based on [open3d](https://github.com/intel-isl/Ope
 
 ![person](readme/person_square.gif)
 
-It just loads all the mesh files and plays them back. The tool is intended for preview and visualisation purposes only. Currently there is no support for multi-processing in open3d, so mesh loading takes some time.
+It just loads all the mesh files and plays them back. The tool is intended for preview and visualisation purposes only. The software uses multi-processing to load meshes as fast as possible.
 
 ### Installation
 To install the necessary packages, use the requirements file:
 
 ```
-pip install git+https://github.com/cansik/mesh-sequence-player.git@1.4.0
+pip install git+https://github.com/cansik/mesh-sequence-player.git@1.5.0
 ```
 
 ### Usage
@@ -33,7 +33,7 @@ Here is the full help file.
 usage: mesh_sequence_player [-h] [--format FORMAT] [--fps FPS] [--no-loop]
                             [--width WIDTH] [--height HEIGHT]
                             [--background r g b] [--hidden] [--rotate ROTATE]
-                            [--output OUTPUT] [--debug]
+                            [--output OUTPUT] [--load-safe] [--debug]
                             input
 
 Play mesh sequences directly in python.
@@ -52,6 +52,7 @@ optional arguments:
   --hidden            Hide preview window.
   --rotate ROTATE     Horizontal axis rotation.
   --output OUTPUT     Output path to mp4 file. Sets no-loop to True.
+  --load-safe         Load meshes the safe way and with texture (but slower).
   --debug             Show debug information.
 ```
 
