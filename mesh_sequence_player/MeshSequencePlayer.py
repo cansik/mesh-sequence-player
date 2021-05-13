@@ -2,7 +2,7 @@ import time
 
 import numpy as np
 import open3d as o3d
-from cv2 import VideoWriter_fourcc, VideoWriter
+from cv2 import VideoWriter_fourcc, VideoWriter, cvtColor, COLOR_BGR2RGB
 from tqdm import tqdm
 
 from mesh_sequence_player.FPSCounter import FPSCounter
@@ -109,7 +109,8 @@ class MeshSequencePlayer:
                 color = self.vis.capture_screen_float_buffer(False)
                 color = np.asarray(color)
                 color = np.uint8(color * 255.0)
-                self._writer.write(color)
+                im_rgb = cvtColor(color, COLOR_BGR2RGB)
+                self._writer.write(im_rgb)
 
                 self.render_index += 1
                 self._progress_bar.update()
