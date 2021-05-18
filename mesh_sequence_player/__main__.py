@@ -4,7 +4,36 @@ import os
 from mesh_sequence_player.MeshSequencePlayer import MeshSequencePlayer
 
 
+def parseArguments():
+    a = argparse.ArgumentParser(
+        prog="mesh-sequence-player",
+        description="Play mesh sequences directly in python.")
+    a.add_argument("input", default=".", help="Path to the mesh files (directory).")
+    a.add_argument("--format", default="*.obj", type=str, help="File format (default *.obj).")
+    a.add_argument("--fps", default=24, type=int, help="Framerate for playback.")
+    a.add_argument("--no-loop", action='store_true', help="Do not loop the sequence.")
+    a.add_argument("--width", default=512, type=int, help="Player width (default 512).")
+    a.add_argument("--height", default=512, type=int, help="Player height (default 512).")
+    a.add_argument("--background", default=[255, 255, 255], type=int, nargs=3, metavar=('r', 'g', 'b'),
+                   help="Background color (0-255).")
+    a.add_argument("--hidden", action='store_true', help="Hide preview window.")
+    a.add_argument("--rotate", default=0.0, type=float, help="Horizontal axis rotation.")
+    a.add_argument("--output", default=None, type=str, help="Output path to mp4 file. Sets no-loop to True.")
+    a.add_argument("--load-safe", action='store_true', help="Load meshes the safe way and with texture (but slower).")
+    a.add_argument("--debug", action='store_true', help="Show debug information.")
+
+    args = a.parse_args()
+
+    if args.output is not None:
+        args.no_loop = True
+        args.output = os.path.abspath(args.output)
+
+    return args
+
+
 def main():
+    args = parseArguments()
+
     player = MeshSequencePlayer(fps=args.fps, loop=not args.no_loop)
     player.rotation_x = args.rotate
     player.background_color = args.background
@@ -31,27 +60,4 @@ def main():
 
 
 if __name__ == "__main__":
-    a = argparse.ArgumentParser(
-        prog="mesh_sequence_player",
-        description="Play mesh sequences directly in python.")
-    a.add_argument("input", default=".", help="Path to the mesh files (directory).")
-    a.add_argument("--format", default="*.obj", type=str, help="File format (default *.obj).")
-    a.add_argument("--fps", default=24, type=int, help="Framerate for playback.")
-    a.add_argument("--no-loop", action='store_true', help="Do not loop the sequence.")
-    a.add_argument("--width", default=512, type=int, help="Player width (default 512).")
-    a.add_argument("--height", default=512, type=int, help="Player height (default 512).")
-    a.add_argument("--background", default=[255, 255, 255], type=int, nargs=3, metavar=('r', 'g', 'b'),
-                   help="Background color (0-255).")
-    a.add_argument("--hidden", action='store_true', help="Hide preview window.")
-    a.add_argument("--rotate", default=0.0, type=float, help="Horizontal axis rotation.")
-    a.add_argument("--output", default=None, type=str, help="Output path to mp4 file. Sets no-loop to True.")
-    a.add_argument("--load-safe", action='store_true', help="Load meshes the safe way and with texture (but slower).")
-    a.add_argument("--debug", action='store_true', help="Show debug information.")
-
-    args = a.parse_args()
-
-    if args.output is not None:
-        args.no_loop = True
-        args.output = os.path.abspath(args.output)
-
     main()

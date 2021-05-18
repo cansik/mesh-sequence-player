@@ -9,8 +9,13 @@ with open('requirements.txt') as f:
 
 setup(
     name=NAME,
-    version='1.5.1',
+    version='1.5.2',
     packages=required_packages,
+    entry_points={
+        'console_scripts': [
+          'mesh-sequence-player = mesh_sequence_player.__main__:main',
+        ],
+      },
     url='https://github.com/cansik/mesh-sequence-player',
     license='MIT License',
     author='Florian Bruggisser',
