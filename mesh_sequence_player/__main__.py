@@ -4,7 +4,7 @@ import os
 from mesh_sequence_player.MeshSequencePlayer import MeshSequencePlayer
 
 
-def parseArguments():
+def parse_arguments():
     a = argparse.ArgumentParser(
         prog="mesh-sequence-player",
         description="Play mesh sequences directly in python.")
@@ -32,7 +32,7 @@ def parseArguments():
 
 
 def main():
-    args = parseArguments()
+    args = parse_arguments()
 
     player = MeshSequencePlayer(fps=args.fps, loop=not args.no_loop)
     player.rotation_x = args.rotate
