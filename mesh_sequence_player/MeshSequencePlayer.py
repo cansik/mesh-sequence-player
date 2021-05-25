@@ -6,7 +6,8 @@ from cv2 import VideoWriter_fourcc, VideoWriter, cvtColor, COLOR_BGR2RGB
 from tqdm import tqdm
 
 from mesh_sequence_player.FPSCounter import FPSCounter
-from mesh_sequence_player.FastGeometryLoader import load_meshes_fast, load_meshes_safe, load_pointclouds_safe
+from mesh_sequence_player.FastGeometryLoader import load_meshes_fast, load_meshes_safe, load_pointclouds_safe, \
+    load_pointclouds_fast
 from mesh_sequence_player.utils import get_files_in_path
 
 
@@ -48,12 +49,10 @@ class MeshSequencePlayer:
     def load_pointclouds(self, pcl_folder: str, pcl_format: str = "*.ply"):
         files = sorted(get_files_in_path(pcl_folder, extensions=[pcl_format]))
 
-        self.geometries = load_pointclouds_safe(files)
-
-        # if self.load_safe:
-        #     self.geometries = load_pointclouds_safe(files)
-        # else:
-        #     self.geometries = load_meshes_fast(files)
+        if self.load_safe:
+            self.geometries = load_pointclouds_safe(files)
+        else:
+            self.geometries = load_pointclouds_fast(files)
 
     def open(self, window_name: str = 'Mesh Sequence Player',
              width: int = 1080, height: int = 1080,

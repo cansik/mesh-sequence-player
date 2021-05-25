@@ -45,6 +45,20 @@ class _MeshTransmissionFormat:
         return mesh
 
 
+class _PointCloudTransmissionFormat:
+    def __init__(self, pointcloud: PointCloud):
+        self.points = np.array(pointcloud.points)
+        self.colors = np.array(pointcloud.colors)
+        self.normals = np.array(pointcloud.normals)
+
+    def create_pointcloud(self) -> PointCloud:
+        pointcloud = PointCloud()
+        pointcloud.points = o3d.utility.Vector3dVector(self.points)
+        pointcloud.colors = o3d.utility.Vector3dVector(self.colors)
+        pointcloud.normals = o3d.utility.Vector3dVector(self.normals)
+        return pointcloud
+
+
 def _load_mesh_data(file: str) -> _MeshTransmissionFormat:
     mesh = o3d.io.read_triangle_mesh(file)
     return _MeshTransmissionFormat(mesh)
@@ -83,3 +97,16 @@ def load_pointclouds_safe(files: [str]) -> [PointCloud]:
             clouds.append(o3d.io.read_point_cloud(file))
             prog.update()
     return clouds
+
+
+def _load_pointcloud_data(file: str) -> _PointCloudTransmissionFormat:
+    pointcloud = o3d.io.read_point_cloud(file)
+    return _PointCloudTransmissionFormat(pointcloud)
+
+
+def load_pointclouds_fast(files: [str]) -> [PointCloud]:
+    clouds = []
+    with Pool(processes=multiprocessing.cpu_count()) as pool:
+        for result in tqdm(pool.imap(_load_pointcloud_data, files), total=len(files), desc="pointcloud loading"):
+            clouds.append(result)
+    return [cloud.create_pointcloud() for cloud in clouds]
