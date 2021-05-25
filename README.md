@@ -9,7 +9,7 @@ It just loads all the mesh files and plays them back. The tool is intended for p
 To install the necessary packages, use the requirements file:
 
 ```
-pip install git+https://github.com/cansik/mesh-sequence-player.git@1.5.2
+pip install git+https://github.com/cansik/mesh-sequence-player.git@1.6.0
 ```
 
 ### Usage
@@ -52,7 +52,7 @@ optional arguments:
   --rotate ROTATE      Horizontal axis rotation.
   --output OUTPUT      Output path to mp4 file. Sets no-loop to True.
   --load-safe          Load meshes the safe way and with texture (but slower).
-  -p, --pointcloud     Load point clouds instead of meshes.
+  -p, --pointcloud     Load pointclouds (*.ply) instead of meshes.
   --debug              Show debug information.
 ```
 
