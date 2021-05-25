@@ -20,6 +20,7 @@ def parse_arguments():
     a.add_argument("--rotate", default=0.0, type=float, help="Horizontal axis rotation.")
     a.add_argument("--output", default=None, type=str, help="Output path to mp4 file. Sets no-loop to True.")
     a.add_argument("--load-safe", action='store_true', help="Load meshes the safe way and with texture (but slower).")
+    a.add_argument("-p", "--pointcloud", action='store_true', help="Load point clouds instead of meshes.")
     a.add_argument("--debug", action='store_true', help="Show debug information.")
 
     args = a.parse_args()
@@ -27,6 +28,11 @@ def parse_arguments():
     if args.output is not None:
         args.no_loop = True
         args.output = os.path.abspath(args.output)
+
+    # set pointcloud specific settings
+    if args.pointcloud:
+        if args.format == "*.obj":
+            args.format = "*.ply"
 
     return args
 
@@ -51,7 +57,11 @@ def main():
         player.render = True
         player.output_path = os.path.abspath(args.output)
 
-    player.load(args.input, args.format)
+    if args.pointcloud:
+        player.load_pointclouds(args.input, args.format)
+    else:
+        player.load_meshes(args.input, args.format)
+
     player.open(window_name="Mesh Sequence Player - %s" % dir_name,
                 width=args.width, height=args.height, visible=not args.hidden)
 

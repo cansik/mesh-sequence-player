@@ -3,7 +3,7 @@ from multiprocessing import Pool
 
 import open3d as o3d
 import numpy as np
-from open3d.cpu.pybind.geometry import TriangleMesh
+from open3d.cpu.pybind.geometry import TriangleMesh, PointCloud
 from tqdm import tqdm
 
 
@@ -45,15 +45,15 @@ class _MeshTransmissionFormat:
         return mesh
 
 
-def _load_data(file: str) -> _MeshTransmissionFormat:
+def _load_mesh_data(file: str) -> _MeshTransmissionFormat:
     mesh = o3d.io.read_triangle_mesh(file)
     return _MeshTransmissionFormat(mesh)
 
 
-def load_geometries_fast(files: [str]) -> [TriangleMesh]:
+def load_meshes_fast(files: [str]) -> [TriangleMesh]:
     meshes = []
     with Pool(processes=multiprocessing.cpu_count()) as pool:
-        for result in tqdm(pool.imap(_load_data, files), total=len(files), desc="mesh loading"):
+        for result in tqdm(pool.imap(_load_mesh_data, files), total=len(files), desc="mesh loading"):
             meshes.append(result)
     return [mesh.create_mesh() for mesh in meshes]
 
@@ -62,15 +62,24 @@ def load_geometries(files: [str]) -> [TriangleMesh]:
     meshes = []
     with tqdm(desc="mesh loading", total=len(files)) as prog:
         for file in files:
-            meshes.append(_load_data(file))
+            meshes.append(_load_mesh_data(file))
             prog.update()
     return [mesh.create_mesh() for mesh in meshes]
 
 
-def load_geometries_safe(files: [str]) -> [TriangleMesh]:
+def load_meshes_safe(files: [str]) -> [TriangleMesh]:
     meshes = []
     with tqdm(desc="mesh loading", total=len(files)) as prog:
         for file in files:
             meshes.append(o3d.io.read_triangle_mesh(file))
             prog.update()
     return meshes
+
+
+def load_pointclouds_safe(files: [str]) -> [PointCloud]:
+    clouds = []
+    with tqdm(desc="pointcloud loading", total=len(files)) as prog:
+        for file in files:
+            clouds.append(o3d.io.read_point_cloud(file))
+            prog.update()
+    return clouds

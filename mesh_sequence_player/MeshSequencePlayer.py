@@ -6,7 +6,7 @@ from cv2 import VideoWriter_fourcc, VideoWriter, cvtColor, COLOR_BGR2RGB
 from tqdm import tqdm
 
 from mesh_sequence_player.FPSCounter import FPSCounter
-from mesh_sequence_player.FastGeometryLoader import load_geometries_fast, load_geometries_safe
+from mesh_sequence_player.FastGeometryLoader import load_meshes_fast, load_meshes_safe, load_pointclouds_safe
 from mesh_sequence_player.utils import get_files_in_path
 
 
@@ -14,7 +14,7 @@ class MeshSequencePlayer:
     def __init__(self, fps: int = 24, loop: bool = True):
         self.fps = fps
         self.loop = loop
-        self.meshes = []
+        self.geometries = []
         self.rotation_x = 0.0
         self.rotation_y = 0.0
         self.background_color = [255, 255, 255]
@@ -37,13 +37,23 @@ class MeshSequencePlayer:
 
         self._fps_counter = FPSCounter()
 
-    def load(self, mesh_folder: str, mesh_format: str = "*.obj"):
+    def load_meshes(self, mesh_folder: str, mesh_format: str = "*.obj"):
         files = sorted(get_files_in_path(mesh_folder, extensions=[mesh_format]))
 
         if self.load_safe:
-            self.meshes = load_geometries_safe(files)
+            self.geometries = load_meshes_safe(files)
         else:
-            self.meshes = load_geometries_fast(files)
+            self.geometries = load_meshes_fast(files)
+
+    def load_pointclouds(self, pcl_folder: str, pcl_format: str = "*.ply"):
+        files = sorted(get_files_in_path(pcl_folder, extensions=[pcl_format]))
+
+        self.geometries = load_pointclouds_safe(files)
+
+        # if self.load_safe:
+        #     self.geometries = load_pointclouds_safe(files)
+        # else:
+        #     self.geometries = load_meshes_fast(files)
 
     def open(self, window_name: str = 'Mesh Sequence Player',
              width: int = 1080, height: int = 1080,
@@ -53,14 +63,14 @@ class MeshSequencePlayer:
                                height=height,
                                visible=visible)
 
-        if len(self.meshes) == 0:
+        if len(self.geometries) == 0:
             print("No meshes to show!")
             return
 
         if self.render:
             fourcc = VideoWriter_fourcc(*'mp4v')
             self._writer = VideoWriter(self.output_path, fourcc, self.fps, (width, height))
-            self._progress_bar = tqdm(total=len(self.meshes), desc="rendering")
+            self._progress_bar = tqdm(total=len(self.geometries), desc="rendering")
 
             # make rendering as fast as possible
             self.fps = 10000.0
@@ -70,7 +80,7 @@ class MeshSequencePlayer:
         opt.background_color = np.asarray(self.background_color)
 
         # add first mesh
-        self.vis.add_geometry(self.meshes[self._index], reset_bounding_box=True)
+        self.vis.add_geometry(self.geometries[self._index], reset_bounding_box=True)
 
     def close(self):
         self._is_playing = False
@@ -101,7 +111,7 @@ class MeshSequencePlayer:
             self.vis.update_renderer()
 
             # skip if no meshes available
-            if len(self.meshes) == 0:
+            if len(self.geometries) == 0:
                 continue
 
             # render
@@ -128,16 +138,16 @@ class MeshSequencePlayer:
                 tqdm.write("FPS: %0.2f" % self._fps_counter.fps)
 
     def _next_frame(self):
-        if not self.loop and self._index == len(self.meshes) - 1:
+        if not self.loop and self._index == len(self.geometries) - 1:
             if self.render:
                 self._writer.release()
                 self._progress_bar.close()
 
             self._is_playing = False
 
-        self.vis.remove_geometry(self.meshes[self._index], reset_bounding_box=False)
-        self._index = (self._index + 1) % len(self.meshes)
-        self.vis.add_geometry(self.meshes[self._index], reset_bounding_box=False)
+        self.vis.remove_geometry(self.geometries[self._index], reset_bounding_box=False)
+        self._index = (self._index + 1) % len(self.geometries)
+        self.vis.add_geometry(self.geometries[self._index], reset_bounding_box=False)
 
     @staticmethod
     def _millis() -> int:
