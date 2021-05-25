@@ -31,29 +31,29 @@ Here is the full help file.
 
 ```
 usage: mesh-sequence-player [-h] [--format FORMAT] [--fps FPS] [--no-loop]
-                            [--width WIDTH] [--height HEIGHT]
-                            [--background r g b] [--hidden] [--rotate ROTATE]
-                            [--output OUTPUT] [--load-safe] [--debug]
+                            [--size width height] [--background r g b]
+                            [--hidden] [--rotate ROTATE] [--output OUTPUT]
+                            [--load-safe] [-p] [--debug]
                             input
 
 Play mesh sequences directly in python.
 
 positional arguments:
-  input               Path to the mesh files (directory).
+  input                Path to the mesh files (directory).
 
 optional arguments:
-  -h, --help          show this help message and exit
-  --format FORMAT     File format (default *.obj).
-  --fps FPS           Framerate for playback.
-  --no-loop           Do not loop the sequence.
-  --width WIDTH       Player width (default 512).
-  --height HEIGHT     Player height (default 512).
-  --background r g b  Background color (0-255).
-  --hidden            Hide preview window.
-  --rotate ROTATE     Horizontal axis rotation.
-  --output OUTPUT     Output path to mp4 file. Sets no-loop to True.
-  --load-safe         Load meshes the safe way and with texture (but slower).
-  --debug             Show debug information.
+  -h, --help           show this help message and exit
+  --format FORMAT      File format (default *.obj).
+  --fps FPS            Framerate for playback.
+  --no-loop            Do not loop the sequence.
+  --size width height  Size of the window.
+  --background r g b   Background color (0-255).
+  --hidden             Hide preview window.
+  --rotate ROTATE      Horizontal axis rotation.
+  --output OUTPUT      Output path to mp4 file. Sets no-loop to True.
+  --load-safe          Load meshes the safe way and with texture (but slower).
+  -p, --pointcloud     Load point clouds instead of meshes.
+  --debug              Show debug information.
 ```
 
 ### About

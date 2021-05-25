@@ -12,8 +12,8 @@ def parse_arguments():
     a.add_argument("--format", default="*.obj", type=str, help="File format (default *.obj).")
     a.add_argument("--fps", default=24, type=int, help="Framerate for playback.")
     a.add_argument("--no-loop", action='store_true', help="Do not loop the sequence.")
-    a.add_argument("--width", default=512, type=int, help="Player width (default 512).")
-    a.add_argument("--height", default=512, type=int, help="Player height (default 512).")
+    a.add_argument("--size", default=[512, 512], type=int, nargs=2, metavar=('width', 'height'),
+                   help="Size of the window.")
     a.add_argument("--background", default=[255, 255, 255], type=int, nargs=3, metavar=('r', 'g', 'b'),
                    help="Background color (0-255).")
     a.add_argument("--hidden", action='store_true', help="Hide preview window.")
@@ -62,8 +62,10 @@ def main():
     else:
         player.load_meshes(args.input, args.format)
 
+    width, height = args.size
+
     player.open(window_name="Mesh Sequence Player - %s" % dir_name,
-                width=args.width, height=args.height, visible=not args.hidden)
+                width=width, height=height, visible=not args.hidden)
 
     player.play()
     player.close()
