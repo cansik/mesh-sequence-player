@@ -9,7 +9,7 @@ It just loads all the mesh files and plays them back. The tool is intended for p
 To install the necessary packages, use the requirements file:
 
 ```
-pip install git+https://github.com/cansik/mesh-sequence-player.git@1.6.0
+pip install git+https://github.com/cansik/mesh-sequence-player.git@1.7.0
 ```
 
 ### Usage
@@ -26,6 +26,9 @@ It is also possible to render the individual frames into a mp4 file. Currently o
 mesh-sequence-player folder_to_meshes --output render.mp4
 ```
 
+#### Lazy Loading
+To create renderings of very large sequences it is possible to use the `--lazy` parameter to load the geometries every frame instead of all at once. This is only recommended for rendering and not realtime playback.
+
 #### Help
 Here is the full help file.
 
@@ -33,7 +36,7 @@ Here is the full help file.
 usage: mesh-sequence-player [-h] [--format FORMAT] [--fps FPS] [--no-loop]
                             [--size width height] [--background r g b]
                             [--hidden] [--rotate ROTATE] [--output OUTPUT]
-                            [--load-safe] [-p] [--debug]
+                            [--load-safe] [--lazy] [-p] [--debug]
                             input
 
 Play mesh sequences directly in python.
@@ -52,6 +55,7 @@ optional arguments:
   --rotate ROTATE      Horizontal axis rotation.
   --output OUTPUT      Output path to mp4 file. Sets no-loop to True.
   --load-safe          Load meshes the safe way and with texture (but slower).
+  --lazy               Load meshes one at a time (render large sequences).
   -p, --pointcloud     Load pointclouds (*.ply) instead of meshes.
   --debug              Show debug information.
 ```

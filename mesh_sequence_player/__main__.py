@@ -20,6 +20,7 @@ def parse_arguments():
     a.add_argument("--rotate", default=0.0, type=float, help="Horizontal axis rotation.")
     a.add_argument("--output", default=None, type=str, help="Output path to mp4 file. Sets no-loop to True.")
     a.add_argument("--load-safe", action='store_true', help="Load meshes the safe way and with texture (but slower).")
+    a.add_argument("--lazy", action='store_true', help="Load meshes one at a time (render large sequences).")
     a.add_argument("-p", "--pointcloud", action='store_true', help="Load pointclouds (*.ply) instead of meshes.")
     a.add_argument("--debug", action='store_true', help="Show debug information.")
 
@@ -45,6 +46,7 @@ def main():
     player.background_color = args.background
     player.debug = args.debug
     player.load_safe = args.load_safe
+    player.lazy_loading = args.lazy
 
     dir_name = os.path.split(args.input)[-1]
 

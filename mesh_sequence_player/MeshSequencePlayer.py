@@ -1,3 +1,4 @@
+import os.path
 import time
 
 import numpy as np
@@ -8,6 +9,9 @@ from tqdm import tqdm
 from mesh_sequence_player.FPSCounter import FPSCounter
 from mesh_sequence_player.FastGeometryLoader import load_meshes_fast, load_meshes_safe, load_pointclouds_safe, \
     load_pointclouds_fast
+from mesh_sequence_player.geometries.BaseGeometry import BaseGeometry
+from mesh_sequence_player.geometries.Geometry import Geometry
+from mesh_sequence_player.geometries.LazyGeometry import LazyGeometry
 from mesh_sequence_player.utils import get_files_in_path
 
 
@@ -15,13 +19,14 @@ class MeshSequencePlayer:
     def __init__(self, fps: int = 24, loop: bool = True):
         self.fps = fps
         self.loop = loop
-        self.geometries = []
+        self.geometries: [BaseGeometry] = []
         self.rotation_x = 0.0
         self.rotation_y = 0.0
         self.background_color = [255, 255, 255]
 
         self.debug = False
         self.load_safe = False
+        self.lazy_loading = False
 
         self.render = False
         self.output_path = "render.mp4"
@@ -32,6 +37,7 @@ class MeshSequencePlayer:
         self._is_playing: bool = False
         self._index: int = 0
         self._last_update_ts = 0
+        self._current_geometry = None
 
         self._writer: VideoWriter = None
         self._progress_bar: tqdm = None
@@ -41,18 +47,30 @@ class MeshSequencePlayer:
     def load_meshes(self, mesh_folder: str, mesh_format: str = "*.obj"):
         files = sorted(get_files_in_path(mesh_folder, extensions=[mesh_format]))
 
+        if self.lazy_loading:
+            self.geometries = [LazyGeometry(os.path.abspath(file), o3d.io.read_triangle_mesh) for file in files]
+            return
+
         if self.load_safe:
-            self.geometries = load_meshes_safe(files)
+            meshes = load_meshes_safe(files)
         else:
-            self.geometries = load_meshes_fast(files)
+            meshes = load_meshes_fast(files)
+
+        self.geometries = [Geometry(mesh) for mesh in meshes]
 
     def load_pointclouds(self, pcl_folder: str, pcl_format: str = "*.ply"):
         files = sorted(get_files_in_path(pcl_folder, extensions=[pcl_format]))
 
+        if self.lazy_loading:
+            self.geometries = [LazyGeometry(os.path.abspath(file), o3d.io.read_point_cloud) for file in files]
+            return
+
         if self.load_safe:
-            self.geometries = load_pointclouds_safe(files)
+            pcds = load_pointclouds_safe(files)
         else:
-            self.geometries = load_pointclouds_fast(files)
+            pcds = load_pointclouds_fast(files)
+
+        self.geometries = [Geometry(pcd) for pcd in pcds]
 
     def open(self, window_name: str = 'Mesh Sequence Player',
              width: int = 1080, height: int = 1080,
@@ -79,7 +97,8 @@ class MeshSequencePlayer:
         opt.background_color = np.asarray(self.background_color)
 
         # add first mesh
-        self.vis.add_geometry(self.geometries[self._index], reset_bounding_box=True)
+        self._current_geometry = self.geometries[self._index].get()
+        self.vis.add_geometry(self._current_geometry, reset_bounding_box=True)
 
     def close(self):
         self._is_playing = False
@@ -144,9 +163,10 @@ class MeshSequencePlayer:
 
             self._is_playing = False
 
-        self.vis.remove_geometry(self.geometries[self._index], reset_bounding_box=False)
+        self.vis.remove_geometry(self._current_geometry, reset_bounding_box=False)
         self._index = (self._index + 1) % len(self.geometries)
-        self.vis.add_geometry(self.geometries[self._index], reset_bounding_box=False)
+        self._current_geometry = self.geometries[self._index].get()
+        self.vis.add_geometry(self._current_geometry, reset_bounding_box=False)
 
     @staticmethod
     def _millis() -> int:
