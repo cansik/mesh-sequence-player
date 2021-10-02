@@ -9,12 +9,10 @@ from tqdm import tqdm
 
 class _MeshTransmissionFormat:
     def __init__(self, mesh: TriangleMesh):
-        # todo: implement these properties too
-        # self.adjacency_list = np.array(mesh.adjacency_list)
 
-        # not working?!
-        # self.textures = mesh.textures
-        # self.textures = [np.asarray(tex) for tex in mesh.textures]
+        self.adjacency_list = mesh.adjacency_list
+
+        self.textures = [np.asarray(tex) for tex in mesh.textures]
 
         self.triangle_material_ids = np.array(mesh.triangle_material_ids)
         self.triangle_normals = np.array(mesh.triangle_normals)
@@ -28,10 +26,9 @@ class _MeshTransmissionFormat:
     def create_mesh(self) -> TriangleMesh:
         mesh = TriangleMesh()
 
-        # mesh.adjacency_list =
+        mesh.adjacency_list = self.adjacency_list
 
-        # mesh.textures = [o3d.utility.(tex) for tex in self.textures]
-        # mesh.textures = self.textures
+        mesh.textures = [o3d.geometry.Image(tex) for tex in self.textures]
 
         mesh.triangle_material_ids = o3d.utility.IntVector(self.triangle_material_ids)
         mesh.triangle_normals = o3d.utility.Vector3dVector(self.triangle_normals)
@@ -60,7 +57,11 @@ class _PointCloudTransmissionFormat:
 
 
 def _load_mesh_data(file: str) -> _MeshTransmissionFormat:
-    mesh = o3d.io.read_triangle_mesh(file)
+    # todo: make this an option
+    mesh: TriangleMesh = o3d.io.read_triangle_mesh(file, enable_post_processing=True)
+    # mesh.compute_vertex_normals()
+    # mesh.compute_triangle_normals()
+    # mesh.compute_adjacency_list()
     return _MeshTransmissionFormat(mesh)
 
 
