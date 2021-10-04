@@ -9,4 +9,4 @@ class LazyGeometry(BaseGeometry):
         self.loader = loader
 
     def get(self) -> Geometry3D:
-        return self.loader(self.file_path)
+        return self.loader(self.file_path, enable_post_processing=True)

@@ -86,7 +86,7 @@ def load_meshes_safe(files: [str]) -> [TriangleMesh]:
     meshes = []
     with tqdm(desc="mesh loading", total=len(files)) as prog:
         for file in files:
-            meshes.append(o3d.io.read_triangle_mesh(file))
+            meshes.append(o3d.io.read_triangle_mesh(file, enable_post_processing=True))
             prog.update()
     return meshes
 
