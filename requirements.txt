@@ -3,3 +3,4 @@ open3d>=0.13.0
 opencv-python
 tqdm
 numpy
+ConfigArgParse

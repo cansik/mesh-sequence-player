@@ -1,13 +1,15 @@
 import argparse
 import os
+import configargparse
 
 from mesh_sequence_player.MeshSequencePlayer import MeshSequencePlayer
 
 
 def parse_arguments():
-    a = argparse.ArgumentParser(
+    a = configargparse.ArgumentParser(
         prog="mesh-sequence-player",
         description="Play mesh sequences directly in python.")
+    a.add_argument("-c", "--config", required=False, is_config_file=True, help="Configuration file path.")
     a.add_argument("input", default=".", help="Path to the mesh files (directory).")
     a.add_argument("--format", default="*.obj", type=str, help="File format (default *.obj).")
     a.add_argument("--fps", default=24, type=int, help="Framerate for playback.")
