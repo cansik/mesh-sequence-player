@@ -1,6 +1,6 @@
-import argparse
 import os
 import configargparse
+from open3d.cpu.pybind.utility import set_verbosity_level, VerbosityLevel
 
 from mesh_sequence_player.MeshSequencePlayer import MeshSequencePlayer
 
@@ -12,6 +12,8 @@ def parse_arguments():
     a.add_argument("-c", "--config", required=False, is_config_file=True, help="Configuration file path.")
     a.add_argument("input", default=".", help="Path to the mesh files (directory).")
     a.add_argument("--format", default="*.obj", type=str, help="File format (default *.obj).")
+    a.add_argument("--post-process-mesh", action='store_true',
+                   help="Enable mesh post-processing (texture loading).")
     a.add_argument("--fps", default=24, type=int, help="Framerate for playback.")
     a.add_argument("--no-loop", action='store_true', help="Do not loop the sequence.")
     a.add_argument("--size", default=[512, 512], type=int, nargs=2, metavar=('width', 'height'),
@@ -43,12 +45,16 @@ def parse_arguments():
 def main():
     args = parse_arguments()
 
+    # disable infos
+    set_verbosity_level(VerbosityLevel.Warning)
+
     player = MeshSequencePlayer(fps=args.fps, loop=not args.no_loop)
     player.rotation_x = args.rotate
     player.background_color = args.background
     player.debug = args.debug
     player.load_safe = args.load_safe
     player.lazy_loading = args.lazy
+    player.post_process_mesh = args.post_process_mesh
 
     dir_name = os.path.split(args.input)[-1]
 

@@ -1,5 +1,7 @@
 import os.path
 import time
+from functools import partial
+from typing import Optional
 
 import numpy as np
 import open3d as o3d
@@ -27,6 +29,7 @@ class MeshSequencePlayer:
         self.debug = False
         self.load_safe = False
         self.lazy_loading = False
+        self.post_process_mesh = False
 
         self.render = False
         self.output_path = "render.mp4"
@@ -39,8 +42,8 @@ class MeshSequencePlayer:
         self._last_update_ts = 0
         self._current_geometry = None
 
-        self._writer: VideoWriter = None
-        self._progress_bar: tqdm = None
+        self._writer: Optional[VideoWriter] = None
+        self._progress_bar: Optional[tqdm] = None
 
         self._fps_counter = FPSCounter()
 
@@ -48,13 +51,14 @@ class MeshSequencePlayer:
         files = sorted(get_files_in_path(mesh_folder, extensions=[mesh_format]))
 
         if self.lazy_loading:
-            self.geometries = [LazyGeometry(os.path.abspath(file), o3d.io.read_triangle_mesh) for file in files]
+            method = partial(o3d.io.read_triangle_mesh, enable_post_processing=self.post_process_mesh)
+            self.geometries = [LazyGeometry(os.path.abspath(file), method) for file in files]
             return
 
         if self.load_safe:
-            meshes = load_meshes_safe(files)
+            meshes = load_meshes_safe(files, post_processing=self.post_process_mesh)
         else:
-            meshes = load_meshes_fast(files)
+            meshes = load_meshes_fast(files, post_processing=self.post_process_mesh)
 
         self.geometries = [Geometry(mesh) for mesh in meshes]
 

@@ -1,4 +1,5 @@
 import multiprocessing
+from functools import partial
 from multiprocessing import Pool
 
 import open3d as o3d
@@ -9,10 +10,9 @@ from tqdm import tqdm
 
 class _MeshTransmissionFormat:
     def __init__(self, mesh: TriangleMesh):
-
         self.adjacency_list = mesh.adjacency_list
 
-        self.textures = [np.asarray(tex) for tex in mesh.textures]
+        self.textures = [np.asarray(tex) for tex in mesh.textures if not tex.is_empty()]
 
         self.triangle_material_ids = np.array(mesh.triangle_material_ids)
         self.triangle_normals = np.array(mesh.triangle_normals)
@@ -56,21 +56,12 @@ class _PointCloudTransmissionFormat:
         return pointcloud
 
 
-def _load_mesh_data(file: str) -> _MeshTransmissionFormat:
-    # todo: make this an option
-    mesh: TriangleMesh = o3d.io.read_triangle_mesh(file, enable_post_processing=True)
+def _load_mesh_data(file: str, post_processing: bool = False) -> _MeshTransmissionFormat:
+    mesh: TriangleMesh = o3d.io.read_triangle_mesh(file, enable_post_processing=post_processing)
     # mesh.compute_vertex_normals()
     # mesh.compute_triangle_normals()
     # mesh.compute_adjacency_list()
     return _MeshTransmissionFormat(mesh)
-
-
-def load_meshes_fast(files: [str]) -> [TriangleMesh]:
-    meshes = []
-    with Pool(processes=multiprocessing.cpu_count()) as pool:
-        for result in tqdm(pool.imap(_load_mesh_data, files), total=len(files), desc="mesh loading"):
-            meshes.append(result)
-    return [mesh.create_mesh() for mesh in meshes]
 
 
 def load_geometries(files: [str]) -> [TriangleMesh]:
@@ -82,11 +73,20 @@ def load_geometries(files: [str]) -> [TriangleMesh]:
     return [mesh.create_mesh() for mesh in meshes]
 
 
-def load_meshes_safe(files: [str]) -> [TriangleMesh]:
+def load_meshes_fast(files: [str], post_processing: bool = False) -> [TriangleMesh]:
+    meshes = []
+    with Pool(processes=multiprocessing.cpu_count()) as pool:
+        method = partial(_load_mesh_data, post_processing=post_processing)
+        for result in tqdm(pool.imap(method, files), total=len(files), desc="mesh loading"):
+            meshes.append(result)
+    return [mesh.create_mesh() for mesh in meshes]
+
+
+def load_meshes_safe(files: [str], post_processing: bool = False) -> [TriangleMesh]:
     meshes = []
     with tqdm(desc="mesh loading", total=len(files)) as prog:
         for file in files:
-            meshes.append(o3d.io.read_triangle_mesh(file, enable_post_processing=True))
+            meshes.append(o3d.io.read_triangle_mesh(file, enable_post_processing=post_processing))
             prog.update()
     return meshes
 
