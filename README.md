@@ -29,6 +29,9 @@ mesh-sequence-player folder_to_meshes --output render.mp4
 #### Lazy Loading
 To create renderings of very large sequences it is possible to use the `--lazy` parameter to load the geometries every frame instead of all at once. This is only recommended for rendering and not realtime playback.
 
+#### Safe Loading
+By default, multi-processing is used to load the geometries. However, it is also possible to load the geometries safe (`--load-safe`) without a transmission format conversion (multi-threaded).
+
 #### Textures
 To load obj material files (with textures), it is now possible to use the `--post-process-mesh` command.
 
