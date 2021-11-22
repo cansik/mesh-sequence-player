@@ -1,6 +1,7 @@
 import multiprocessing
 from functools import partial
 from multiprocessing import Pool
+from multiprocessing.pool import ThreadPool
 
 import open3d as o3d
 import numpy as np
@@ -75,7 +76,7 @@ def load_geometries(files: [str]) -> [TriangleMesh]:
 
 def load_meshes_fast(files: [str], post_processing: bool = False) -> [TriangleMesh]:
     meshes = []
-    with Pool(processes=multiprocessing.cpu_count()) as pool:
+    with Pool(processes=min(multiprocessing.cpu_count(), len(files))) as pool:
         method = partial(_load_mesh_data, post_processing=post_processing)
         for result in tqdm(pool.imap(method, files), total=len(files), desc="mesh loading"):
             meshes.append(result)
@@ -84,10 +85,10 @@ def load_meshes_fast(files: [str], post_processing: bool = False) -> [TriangleMe
 
 def load_meshes_safe(files: [str], post_processing: bool = False) -> [TriangleMesh]:
     meshes = []
-    with tqdm(desc="mesh loading", total=len(files)) as prog:
-        for file in files:
-            meshes.append(o3d.io.read_triangle_mesh(file, enable_post_processing=post_processing))
-            prog.update()
+    with ThreadPool(processes=min(multiprocessing.cpu_count(), len(files))) as pool:
+        method = partial(o3d.io.read_triangle_mesh, enable_post_processing=post_processing)
+        for mesh in tqdm(pool.imap(method, files), total=len(files), desc="mesh loading"):
+            meshes.append(mesh)
     return meshes
 
 
