@@ -5,7 +5,7 @@ from typing import Optional
 
 import numpy as np
 import open3d as o3d
-from cv2 import VideoWriter_fourcc, VideoWriter, cvtColor, COLOR_BGR2RGB
+from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
 from tqdm import tqdm
 
 from mesh_sequence_player.FPSCounter import FPSCounter
@@ -42,8 +42,10 @@ class MeshSequencePlayer:
         self._last_update_ts = 0
         self._current_geometry = None
 
-        self._writer: Optional[VideoWriter] = None
+        self.bitrate = "1.5M"
+        self._frames = []
         self._progress_bar: Optional[tqdm] = None
+        self._render_fps = self.fps
 
         self._fps_counter = FPSCounter()
 
@@ -89,8 +91,7 @@ class MeshSequencePlayer:
             return
 
         if self.render:
-            fourcc = VideoWriter_fourcc(*'mp4v')
-            self._writer = VideoWriter(self.output_path, fourcc, self.fps, (width, height))
+            self._frames = []
             self._progress_bar = tqdm(total=len(self.geometries), desc="rendering")
 
             # make rendering as fast as possible
@@ -141,8 +142,8 @@ class MeshSequencePlayer:
                 color = self.vis.capture_screen_float_buffer(False)
                 color = np.asarray(color)
                 color = np.uint8(color * 255.0)
-                im_rgb = cvtColor(color, COLOR_BGR2RGB)
-                self._writer.write(im_rgb)
+                # im_rgb = cvtColor(color, COLOR_BGR2RGB)
+                self._frames.append(color)
 
                 self.render_index += 1
                 self._progress_bar.update()
@@ -162,7 +163,10 @@ class MeshSequencePlayer:
     def _next_frame(self):
         if not self.loop and self._index == len(self.geometries) - 1:
             if self.render:
-                self._writer.release()
+                tqdm.write("\nsaving rendering...")
+                clip = ImageSequenceClip(self._frames, fps=self._render_fps)
+                clip.write_videofile(self.output_path, bitrate=self.bitrate, logger=None)
+                clip.close()
                 self._progress_bar.close()
 
             self._is_playing = False

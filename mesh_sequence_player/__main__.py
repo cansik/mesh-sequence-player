@@ -15,6 +15,7 @@ def parse_arguments():
     a.add_argument("--post-process-mesh", action='store_true',
                    help="Enable mesh post-processing (texture loading).")
     a.add_argument("--fps", default=24, type=int, help="Framerate for playback.")
+    a.add_argument("--bitrate", default="1.5M", type=str, help="Bitrate of the rendered mp4.")
     a.add_argument("--no-loop", action='store_true', help="Do not loop the sequence.")
     a.add_argument("--size", default=[512, 512], type=int, nargs=2, metavar=('width', 'height'),
                    help="Size of the window.")
@@ -55,6 +56,7 @@ def main():
     player.load_safe = args.load_safe
     player.lazy_loading = args.lazy
     player.post_process_mesh = args.post_process_mesh
+    player.bitrate = args.bitrate
 
     dir_name = os.path.split(args.input)[-1]
 
