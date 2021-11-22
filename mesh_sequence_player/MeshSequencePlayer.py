@@ -45,7 +45,7 @@ class MeshSequencePlayer:
         self.bitrate = "1.5M"
         self._frames = []
         self._progress_bar: Optional[tqdm] = None
-        self._render_fps = self.fps
+        self._render_fps = fps
 
         self._fps_counter = FPSCounter()
 

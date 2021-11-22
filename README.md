@@ -40,7 +40,8 @@ Here is the full help file.
 
 ```
 usage: mesh-sequence-player [-h] [-c CONFIG] [--format FORMAT]
-                            [--post-process-mesh] [--fps FPS] [--no-loop]
+                            [--post-process-mesh] [--fps FPS]
+                            [--bitrate BITRATE] [--no-loop]
                             [--size width height] [--background r g b]
                             [--hidden] [--rotate ROTATE] [--output OUTPUT]
                             [--load-safe] [--lazy] [-p] [--debug]
@@ -58,6 +59,7 @@ optional arguments:
   --format FORMAT       File format (default *.obj).
   --post-process-mesh   Enable mesh post-processing (texture loading).
   --fps FPS             Framerate for playback.
+  --bitrate BITRATE     Bitrate of the rendered mp4.
   --no-loop             Do not loop the sequence.
   --size width height   Size of the window.
   --background r g b    Background color (0-255).
