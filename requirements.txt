@@ -1,5 +1,5 @@
 wheel
-open3d>=0.13.0
+open3d>=0.14.1
 opencv-python
 tqdm
 numpy

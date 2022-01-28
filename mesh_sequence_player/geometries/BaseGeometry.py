@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
-
-from open3d.cpu.pybind.geometry import Geometry3D
+import open3d as o3d
 
 
 class BaseGeometry(ABC):
     @abstractmethod
-    def get(self) -> Geometry3D:
+    def get(self) -> o3d.geometry.Geometry3D:
         pass

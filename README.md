@@ -9,7 +9,7 @@ It just loads all the mesh files and plays them back. The tool is intended for p
 To install the necessary packages, use the requirements file:
 
 ```
-pip install git+https://github.com/cansik/mesh-sequence-player.git@1.9.1
+pip install git+https://github.com/cansik/mesh-sequence-player.git@1.10.1
 ```
 
 ### Usage

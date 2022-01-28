@@ -1,6 +1,6 @@
 import os
 import configargparse
-from open3d.cpu.pybind.utility import set_verbosity_level, VerbosityLevel
+import open3d as o3d
 
 from mesh_sequence_player.MeshSequencePlayer import MeshSequencePlayer
 
@@ -47,7 +47,7 @@ def main():
     args = parse_arguments()
 
     # disable infos
-    set_verbosity_level(VerbosityLevel.Warning)
+    o3d.utility.set_verbosity_level(o3d.utility.VerbosityLevel.Warning)
 
     player = MeshSequencePlayer(fps=args.fps, loop=not args.no_loop)
     player.rotation_x = args.rotate

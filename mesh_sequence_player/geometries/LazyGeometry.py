@@ -1,5 +1,4 @@
-from open3d.cpu.pybind.geometry import Geometry3D
-
+import open3d as o3d
 from mesh_sequence_player.geometries.BaseGeometry import BaseGeometry
 
 
@@ -8,5 +7,5 @@ class LazyGeometry(BaseGeometry):
         self.file_path = file_path
         self.loader = loader
 
-    def get(self) -> Geometry3D:
+    def get(self) -> o3d.geometry.Geometry3D:
         return self.loader(self.file_path, enable_post_processing=True)
